@@ -31,7 +31,7 @@ def question3a():
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
-def question3b(): # Not sure why this isn't working...
+def question3b():
     answerDiscount = 0.01
     answerNoise = 0.5
     answerLivingReward = 0.0
