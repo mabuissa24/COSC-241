@@ -75,70 +75,35 @@ class ReflexAgent(Agent):
 
         width = newFood.packBits()[0]
         height = newFood.packBits()[1]
-       #  print "printing"
-        # print "pacman's pos", newPos
-        # print(newFood)
-        # for a in successorGameState.getGhostPositions():
-            # print a
-        # print newScaredTimes
-        # print(successorGameState.getScore())
         walls = currentGameState.getWalls()
         if walls[newPos[0]][newPos[1]]:
-            # print "wall alert"
             solution = -10000
-            # print "solution is:", solution
             return solution
-
         if newPos == currentGameState.getPacmanPosition():
             solution = -111111111111
             return solution
-
         numGhosts = 0
         ghostDist = width + height
         for pos in successorGameState.getGhostPositions():
             distance = util.manhattanDistance(pos, newPos)
             if distance < ghostDist:
                 ghostDist = distance
-            #ghostDist += util.manhattanDistance(pos, newPos)
             numGhosts += 1
-
-        foodDist = closestFood(newPos, newFood, width, height)  # We should maybe test this further
-        # print "foodDist is", foodDist
+        foodDist = closestFood(newPos, newFood, width, height)
         foodTotal = totalFood(newFood, width, height)
-        # print "foodTotal is", foodTotal
-        # print "ghostDist is", ghostDist
-        # print "time scared is", newScaredTimes
-
-        # if food distance = 1 and ghost is far, eat the damn food
-
-        # if ghostDist > (width + height) / (4 * numGhosts) and foodDist <= 1:
-        #     solution = 11111111
-        #     print "solution", solution
-
-        # ADD GHOST POWER PELLET CASE
         # If you can eat a power pellet, DO
         minScaredTime = min(newScaredTimes)
-
         # When there are any ghosts who have scared time left, pursue them
         # Until there's only one scared amount left, then go back to running away
         if (minScaredTime > 1):
             solution = 3 * (width + height) - 15 * ghostDist - foodDist - foodTotal
-        # elif ghostDist > (width + height) / (5 * numGhosts): # Will generally be lower than the else case; makes exiting this range of the ghost look bad
         elif ghostDist > 3:
-            # print "ghost is far enough away"
             solution = 3 * (width + height) + ghostDist - 2 * foodDist - (width + height) * foodTotal
         else:
-            # print "ghost is very close"
             solution = (width + height) * ghostDist - foodDist - (width + height) * foodTotal
 
-        # solution = util.manhattanDistance(successorGameState.getGhostPositions(),
-        # successorGameState.getPacmanPosition())
-        # print "distances", ghostDist
-
-
-        # print "solution is", solution
         return solution
-        # return successorGameState.getScore()
+
 
 def closestFood(position, food, w, h):
     positionOfClosestFood = (-1, -1)
@@ -406,21 +371,12 @@ def betterEvaluationFunction(currentGameState):
 
     width = newFood.packBits()[0]
     height = newFood.packBits()[1]
-    #  print "printing"
-    # print "pacman's pos", newPos
-    # print(newFood)
-    # for a in successorGameState.getGhostPositions():
-    # print a
-    # print newScaredTimes
-    # print(successorGameState.getScore())
     walls = currentGameState.getWalls()
     if walls[newPos[0]][newPos[1]]:
-        # print "wall alert"
         solution = -10000
-        # print "solution is:", solution
         return solution
 
-    if newPos == currentGameState.getPacmanPosition(): # This was meant to stop pacman from sitting in a corner and not moving
+    if newPos == currentGameState.getPacmanPosition(): # stop pacman from sitting in a corner and not moving
         solution = -111111111111
         return solution
 
@@ -430,23 +386,10 @@ def betterEvaluationFunction(currentGameState):
         distance = util.manhattanDistance(pos, newPos)
         if distance < ghostDist:
             ghostDist = distance
-        # ghostDist += util.manhattanDistance(pos, newPos)
         numGhosts += 1
 
-    foodDist = closestFood(newPos, newFood, width, height)  # We should maybe test this further
-    # print "foodDist is", foodDist
+    foodDist = closestFood(newPos, newFood, width, height)
     foodTotal = totalFood(newFood, width, height)
-    # print "foodTotal is", foodTotal
-    # print "ghostDist is", ghostDist
-    # print "time scared is", newScaredTimes
-
-    # if food distance = 1 and ghost is far, eat the damn food
-
-    # if ghostDist > (width + height) / (4 * numGhosts) and foodDist <= 1:
-    #     solution = 11111111
-    #     print "solution", solution
-
-    # ADD GHOST POWER PELLET CASE
     # If you can eat a power pellet, DO
     minScaredTime = min(newScaredTimes)
 
@@ -454,22 +397,13 @@ def betterEvaluationFunction(currentGameState):
     # Until there's only one scared amount left, then go back to running away
     if (minScaredTime > 1):
         solution = 3 * (width + height) - 15 * ghostDist - foodDist - foodTotal
-    # elif ghostDist > (width + height) / (5 * numGhosts): # Will generally be lower than the else case; makes exiting this range of the ghost look bad
     elif ghostDist > 3:
-        # print "ghost is far enough away"
         solution = 3 * (width + height) + ghostDist - 2 * foodDist - (width + height) * foodTotal
     else:
-        # print "ghost is very close"
         solution = (width + height) * ghostDist - foodDist - (width + height) * foodTotal
 
-    # solution = util.manhattanDistance(successorGameState.getGhostPositions(),
-    # successorGameState.getPacmanPosition())
-    # print "distances", ghostDist
-
-    # print "solution is", solution
     return solution
 
-    util.raiseNotDefined()
 
 # Abbreviation
 better = betterEvaluationFunction
