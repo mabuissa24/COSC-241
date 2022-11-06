@@ -300,16 +300,15 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         state = (self.startingPosition, [False, False, False, False])
         return (self.startingPosition, self.booleanCheck(state))
-        util.raiseNotDefined()
+
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        goal = state[1][0] and state[1][1] and state[1][2] and state[1][3]
         return state[1][0] and state[1][1] and state[1][2] and state[1][3]
-        util.raiseNotDefined()
+
 
     def getSuccessors(self, state):
         """
@@ -321,33 +320,23 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
-        successors = []
-        #print("Adding successors to state:")
-        #print(state)
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
             "*** YOUR CODE HERE ***"
 
+        successors = []
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            # Add a successor state to the successor list if the action is legal
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
-
             cornerBooleans = state[1]
             if not hitsWall:
                 newLoc = (nextx, nexty)
                 newState = (newLoc, self.booleanCheck((newLoc, state[1])))
-                child = (newState, action, self.getCostOfActions([action])) # might need to change stepCost - use getCostOfActions()?
+                child = (newState, action, self.getCostOfActions([action])) 
                 successors.append(child)
 
-        self._expanded += 1 # DO NOT CHANGE
+        self._expanded += 1 
         return successors
 
     def booleanCheck(self, state):
@@ -357,7 +346,6 @@ class CornersProblem(search.SearchProblem):
         for i in range(len(self.corners)):
             if loc == self.corners[i]:
                 corners[i] = True
-
         return corners
 
 
@@ -389,20 +377,15 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
+    "*** YOUR CODE HERE ***"
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     width = walls.packBits()[0]
     height = walls.packBits()[1]
-    # print("WALLS")
-    # print(walls)
 
-    "*** YOUR CODE HERE ***"
     def wallModifier(loc1, loc2):
         if (loc1 == loc2):
             return 0
-        # print("CALLING WALLMODIFIER WITH ")
-        # print(loc1)
-        # print(loc2)
         if (loc1[0] == loc2[0]): # same X coordinate, must be along wall
             wallLengths = [0]
             # go through all spaces between Y coordinates: loc1[1] and loc2[1]
@@ -410,23 +393,7 @@ def cornersHeuristic(state, problem):
             maximum = max(loc1[1], loc2[1])
             for i in range(minimum, maximum):
                 if walls[loc1[0]][i]:
-                    # print("THERE IS A WALL AT (X, Y)")
-                    # print(loc1[0])
-                    # print(i)
                     return 0
-                    #wall = 1
-                    # while (loc1[0] + wall < width):
-                    #     if walls[loc1[0] + wall][i]:
-                    #         wall = wall + 1
-                    #     else:
-                    #         break
-                    #wallLengths.append(wall)
-            #print("ABOUT TO ADD LENGTH TO PATH BETWEEN POINTS")
-            #print(loc1)
-            #print(loc2)
-            #print(max(wallLengths) * 2)
-            #return max(wallLengths) * 2
-
         return 0
 
 
@@ -441,35 +408,21 @@ def cornersHeuristic(state, problem):
         corner = -1
         minDist = distance(corners[1], corners[2])
         for i in range(4):
-            #print("I IS")
-            #print(i)
             c = corners[i]
             if not booleans[i]:
-                #dist = math.sqrt((c[0] - loc[0]) ** 2 + (c[1] - loc[1]) ** 2)
                 dist = distance(c, loc)
                 if dist < minDist:
                     minDist = dist
-                    #print("MINDIST BECOMES")
-                    #print(minDist)
-                    #print("CORNER BECOMES")
                     corner = i
-                    #print(corner)
 
         if corner == -1:
-            #print("Corner is -1 (solution should be found)")
             break
-        #print("We're setting corner to true. Corner is ")
-        #print(corner)
         runningDistance = runningDistance + distance(loc, corners[corner])
-        #  + wallModifier(loc, corners[corner])
         loc = corners[corner]
         booleans[corner] = True
 
-    #print("Running distance is for the state is ")
-    #print(state)
-    #print(runningDistance)
-    return runningDistance
     # Default to trivial solution
+    return runningDistance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -490,7 +443,7 @@ class FoodSearchProblem:
         self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0 # DO NOT CHANGE
+        self._expanded = 0
         self.heuristicInfo = {} # A dictionary for the heuristic to store information
 
     def getStartState(self):
@@ -570,49 +523,32 @@ def foodHeuristic(state, problem):
     # starts from zeop
     furthestfoodR = findFurthestFoodRight(state, width, height)
     furthestfoodL = findFurthestFoodLeft(state, width, height)
-    if furthestfoodR == (-1, -1) and furthestfoodL == (-1, -1):
+    if furthestfoodR == (-1, -1) and furthestfoodL == (-1, -1):  # We've eaten all the food on both sides 
         return 0
-    if furthestfoodR == (-1, -1):
+    if furthestfoodR == (-1, -1):  # If the food on the right is eaten, return the furthest food on the left
         return distance(position, furthestfoodL)
-    if furthestfoodL == (-1, -1):
+    if furthestfoodL == (-1, -1):  # If the food on the left is eaten, return the furthest food on the right
         return distance(position, furthestfoodR)
-
+    # Otherwise we have to eat food on both the left and right
     disR = distance(position, furthestfoodR)
     disL = distance(position, furthestfoodL)
 
-    if (disR > disL):
+    if (disR > disL):  # If the distance to the left food is closer, return the path to the left and then the right
         return distance(position, furthestfoodL) + distance(furthestfoodL, furthestfoodR)
-    else:
+    else:  # Otherwise return the path to the left and then the right
         return distance(position, furthestfoodR) + distance(furthestfoodL, furthestfoodR)
 
-    return distance(position, furthestfood)
-
-
-# start with zero
-# code up manhattan distance
-# code up if there is two pieces of food
-# heuristic can say if im in this position do this thing, else if I am in this position do this thing
 
 def findFurthestFoodRight(state, w, h):
-    food = state[1]  # food(1,1)
-    # print("there is food")
-    # print(food[1][2])
+    food = state[1] 
 
     positionOfFurthestFood = (-1, -1)
     maxdistances = 0
-    # print food(1,1)
     position = state[0]
     for i in range(position[0], w):
         for j in range(h):
             if food[i][j]:
                 dist = distance(position, (i, j))
-                # print("distance is")
-                # print(dist)
-                # print("i is")
-                # print(i)
-                # print("j is")
-                #
-                # print(j)
                 if dist > maxdistances:
                     maxdistances = dist
                     positionOfFurthestFood = (i, j)
@@ -621,25 +557,15 @@ def findFurthestFoodRight(state, w, h):
 
 
 def findFurthestFoodLeft(state, w, h):
-    food = state[1]  # food(1,1)
-    # print("there is food")
-    # print(food[1][2])
+    food = state[1] 
 
     positionOfFurthestFood = (-1, -1)
     maxdistances = 0
-    # print food(1,1)
     position = state[0]
     for i in range(0, position[0]):
         for j in range(h):
             if food[i][j]:
                 dist = distance(position, (i, j))
-                # print("distance is")
-                # print(dist)
-                # print("i is")
-                # print(i)
-                # print("j is")
-                #
-                # print(j)
                 if dist > maxdistances:
                     maxdistances = dist
                     positionOfFurthestFood = (i, j)
@@ -648,7 +574,6 @@ def findFurthestFoodLeft(state, w, h):
 
 
 def distance(loc1, loc2):
-    # return math.sqrt((loc1[0] - loc2[0]) ** 2 + (loc1[1] - loc2[1]) ** 2)
     # Cartesian distance on coordinate plane (from current state to food?)
     return abs(loc1[0] - loc2[0]) + abs(loc1[1] - loc2[1])
 
@@ -685,7 +610,7 @@ class ClosestDotSearchAgent(SearchAgent):
 
         # Create an instance of AFS, run it, do it again
         return search.breadthFirstSearch(problem)
-        util.raiseNotDefined()
+
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -712,7 +637,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         self.costFn = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0
 
     def isGoalState(self, state):
         """

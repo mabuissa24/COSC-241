@@ -128,19 +128,10 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    ## pacman is a sequence of plans
-    ## path , store it explicitly in the node class, or
-    ## have the node remember what their parent was ( have  a parent paramete in node) --> what ever my action was and go ask my parent
-    #having path makes debugging easier
-    ## we have to store state in the node. Store pointer in parent node. TO add plan: what is the last actionw e took
     # Create a node that stores problem
-
     current = MyNode(problem.getStartState(), None, 0, None)
 
-
-
     # Create the frontier (stack)
-
     frontier = util.Stack()
     frontier.push(current)
 
@@ -158,35 +149,17 @@ def depthFirstSearch(problem):
         # Check if node.state is not in explored
         if current.getState() not in explored:
 
-
             # Add node to explored, add node's sucessors to frontier
             explored.append(current.getState())
 
-            ## while loop to loop through touples and create children
+            # While loop to loop through touples and create children
             listOfChildren = problem.getSuccessors(current.getState())
             for tpl in listOfChildren:
                 child = MyNode(tpl[0],current,current.getPathCost()+tpl[2],tpl[1])
                 frontier.push(child)
 
-                ## for loop through list
-                ## for x in list
-                    ## child = myNode(,x,x)
-                    ## state from tuple (at index 0)
-                    # parent is current
-                    # pathcost is current.getPathCost + cost from tuple (index 2)
-                    # action from tuple (index 1)
-                    # push child onto frontier
-
     # Return failure
-
     return []
-
-   # print(problem.getStartState())
-   # print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-   # print "Start's successors:", problem.getSuccessors(problem.getStartState())
-   # print problem.getSuccessors(problem.getSuccessors(problem.getStartState())[0][0])
-
-    util.raiseNotDefined()
 
 
 def breadthFirstSearch(problem):
@@ -195,7 +168,6 @@ def breadthFirstSearch(problem):
     current = MyNode(problem.getStartState(), None, 0, None)
 
     # Create the frontier (queue)
-
     frontier = util.Queue()
     frontier.push(current)
 
@@ -216,36 +188,23 @@ def breadthFirstSearch(problem):
             # Add node to explored, add node's sucessors to frontier
             explored.append(current.getState())
 
-            ## while loop to loop through touples and create children
+            # While loop to loop through touples and create children
             listOfChildren = problem.getSuccessors(current.getState())
             for tpl in listOfChildren:
                 child = MyNode(tpl[0], current, current.getPathCost() + tpl[2], tpl[1])
                 frontier.push(child)
 
-                ## for loop through list
-                ## for x in list
-                ## child = myNode(,x,x)
-                ## state from tuple (at index 0)
-                # parent is current
-                # pathcost is current.getPathCost + cost from tuple (index 2)
-                # action from tuple (index 1)
-                # push child onto frontier
-
     # Return failure
-
     return []
-    util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    # algorithm seems like it doesn't fully take advantage of cheap paths (dottedMaze)
-    # expands too many nodes (doesn't reach goal state before exploring more expensive nodes)
 
     current = MyNode(problem.getStartState(), None, 0, None)
 
     # Create the frontier (stack)
-
     frontier = util.PriorityQueue()
     frontier.push(current, current.getPathCost())
 
@@ -262,31 +221,18 @@ def uniformCostSearch(problem):
 
         # Check if node.state is not in explored
         if current.getState() not in explored:
-
             # Add node to explored, add node's sucessors to frontier
             explored.append(current.getState())
 
-            ## while loop to loop through touples and create children
+            # While loop to loop through touples and create children
             listOfChildren = problem.getSuccessors(current.getState())
             for tpl in listOfChildren:
                 child = MyNode(tpl[0], current, current.getPathCost() + tpl[2], tpl[1])
                 frontier.push(child, child.getPathCost())
 
-                ## for loop through list
-                ## for x in list
-                ## child = myNode(,x,x)
-                ## state from tuple (at index 0)
-                # parent is current
-                # pathcost is current.getPathCost + cost from tuple (index 2)
-                # action from tuple (index 1)
-                # push child onto frontier
-
-
-
     # Return failure
-
     return []
-    util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -298,14 +244,10 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    print("START")
 
     current = MyNode(problem.getStartState(), None, 0, None)
-    #print("HEURISTIC BELOW")
-    #print(heuristic(current.getState(), problem))
 
     # Create the frontier (stack)
-
     frontier = util.PriorityQueue()
     frontier.push(current, current.getPathCost() + heuristic(current.getState(), problem))
 
@@ -326,27 +268,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             # Add node to explored, add node's sucessors to frontier
             explored.append(current.getState())
 
-            ## while loop to loop through touples and create children
+            # While loop to loop through touples and create children
             listOfChildren = problem.getSuccessors(current.getState())
             for tpl in listOfChildren:
                 child = MyNode(tpl[0], current, current.getPathCost() + tpl[2], tpl[1])
                 frontier.push(child, child.getPathCost() + heuristic(tpl[0], problem))
 
-                ## for loop through list
-                ## for x in list
-                ## child = myNode(,x,x)
-                ## state from tuple (at index 0)
-                # parent is current
-                # pathcost is current.getPathCost + cost from tuple (index 2)
-                # action from tuple (index 1)
-                # push child onto frontier
-
     # Return failure
-
     return []
-
-
-    util.raiseNotDefined()
 
 
 # Abbreviations
