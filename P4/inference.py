@@ -233,17 +233,6 @@ class ExactInference(InferenceModule):
         self.beliefs = newBeliefs
         self.beliefs.normalize()
 
-    # OLD CODE
-    #    for oldPos in self.legalPositions:
-    #        prob = 0
-    #        for pos in self.legalPositions:
-    #            newPosDist = self.getPositionDistribution(self.setGhostPosition(gameState, pos))[oldPos]
-    #            prob += newPosDist * self.beliefs[pos]
-    #        #print 'newPostDist is ', newPosDist
-    #        newBeliefs[oldPos] = prob
-    #        # for newPos, prob in newPosDist.items():
-    #    self.beliefs = newBeliefs
-    #    self.beliefs.normalize()
 
     def getBeliefDistribution(self):
         return self.beliefs
@@ -316,20 +305,6 @@ class ParticleFilter(InferenceModule):
         noisyDistance = observation
         emissionModel = busters.getObservationDistribution(noisyDistance)
         pacmanPosition = gameState.getPacmanPosition()
-
-        # Number 4 is weighting and resampling
-        # grab one off the list, see how likely it is...?
-        # Build up distribution as you're weighting particles?
-        # Only compute total mass for states that have at least one particle
-
-        # Create 2000 particles distributed uniformly
-        # flipping weighted coin based on transition model
-        # move particles accordingly
-        # weigh particles based on how compatible they are with evidence (emission model)
-        # Use weighted particles to create probability distribution
-        # Sample 2000 brand new particles from that distribution
-
-        # Want to associate weights with particles somehow - counter?
 
         if noisyDistance is None:  # Special case 1
             self.particles = []
@@ -537,13 +512,6 @@ class JointParticleFilter:
             probability = 1
             for i in range(self.numGhosts):
                 noisyDistance = noisyDistances[i]
-                # if noisyDistance is None:  # Special case 1
-                #     for j in range(len(self.particles)):
-                #         part = self.particles[j]
-                #         self.particles[j] = self.getParticleWithGhostInJail(part, i)
-                # else:
-                #if i == 0:
-                    #print 'this is ghost ', i, ' and noisyDistance is ', noisyDistance
                 if noisyDistance is not None:
                     emissionModel = emissionModels[i]
                     distance = util.manhattanDistance(particle[i], pacmanPosition)
@@ -620,14 +588,12 @@ class JointParticleFilter:
         newParticles = []
         for oldParticle in self.particles:
             newParticle = list(oldParticle)  # A list of ghost positions
-            # now loop through and update each entry in newParticle...
-
+            # Loop through and update each entry in newParticle
             for i in range(self.numGhosts):
                 transition = getPositionDistributionForGhost(
                     setGhostPositions(gameState, oldParticle), i, self.ghostAgents[i]
                 )
                 newParticle[i] = util.sample(transition)
-
             newParticles.append(tuple(newParticle))
         self.particles = newParticles
 
@@ -650,7 +616,6 @@ def getPositionDistributionForGhost(gameState, ghostIndex, agent):
     Returns the distribution over positions for a ghost, using the supplied
     gameState.
     """
-    # index 0 is pacman, but the students think that index 0 is the first ghost.
     ghostPosition = gameState.getGhostPosition(ghostIndex + 1)
     actionDist = agent.getDistribution(gameState)
     dist = util.Counter()
